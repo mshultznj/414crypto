@@ -1,0 +1,52 @@
+This build on the second exercise in using-crypto-exercises, so
+make sure you've finished that before starting on this exercise.
+
+Picking up where we left off...
+
+Now, you'll need a symmetric cipher. A simple 1-byte XOR is sufficient
+for our purposes. Alice will choose the symmetric key, and transmit
+it to Bob, encrypted with his public key.  Verify that you can
+encrypt and decrypt this value with your RSA key pair.
+
+Finally, we bring all of this together by implementing symmetric
+encryption and decryption methods (they might be the same, for XOR).
+Try encrypting a message from Alice and sending it to Bob to decrypt,
+and vice-versa.
+
+You should create files alice and bob, which can be shell scripts,
+python scripts, or compiled programs, as you choose. These can
+generate their private keys on the fly, or read them from files.
+They should produce public key files, so that alice can access Bob's
+public key and bob can access Alice's public key. These don't need
+to be done until you actually need to encrypt something. In python,
+you might find the json module useful:
+
+    import json
+
+    pub_key = ... # some python data structure (list, tuple, dict)
+    with open('alice.pub','w') as f:
+        json.dump(pub_key, f)
+
+    bob_pub_key = None
+    with open('bob.pub') as f:
+        bob_pub_key = json.load(f)
+
+When called as
+
+    alice -e "Attack at dawn" > cipher.txt
+
+the program should output an ASCII-friendly representation of the
+message for Bob (this might be a hex dump), in this case redirected
+to the file cipher.txt.
+
+We could then call
+
+     bob -d $(cat cipher.txt)
+
+or cut and paste the output from encrypting, and the program should
+output the decrypted message.
+
+You have now created a hybrid cryptosystem that uses public-key
+crypto to distribute a secret key, and a secret key to encrypt
+longer messages!
+
